@@ -1,0 +1,879 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://www.avaloninparadise.cn</id>
+    <title>理想乡</title>
+    <updated>2020-08-31T13:07:35.687Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://www.avaloninparadise.cn"/>
+    <link rel="self" href="https://www.avaloninparadise.cn/atom.xml"/>
+    <subtitle>远离喧嚣，静下心来感受世界</subtitle>
+    <logo>https://www.avaloninparadise.cn/images/avatar.png</logo>
+    <icon>https://www.avaloninparadise.cn/favicon.ico</icon>
+    <rights>All rights reserved 2020, 理想乡</rights>
+    <entry>
+        <title type="html"><![CDATA[手动创建Telerik空项目(Telerik for WPF)]]></title>
+        <id>https://www.avaloninparadise.cn/post/shou-dong-chuang-jian-telerik-kong-xiang-mu-telerik-for-wpf/</id>
+        <link href="https://www.avaloninparadise.cn/post/shou-dong-chuang-jian-telerik-kong-xiang-mu-telerik-for-wpf/">
+        </link>
+        <updated>2020-02-24T09:21:14.000Z</updated>
+        <content type="html"><![CDATA[<p>Telerik在使用安装包进行安装的情况下，会提供VS的插件。使用该插件能够很方便的建立一个Telerik的空项目。那么在只使用NuGet包的情况下应该如何建立一个Telerik的空项目呢？</p>
+<h1 id="step-1">Step 1</h1>
+<p>新建一个WPF的项目。这一步没啥可说的，不会建的同学可以点右上角的X了。</p>
+<h1 id="step-2">Step 2</h1>
+<p>添加需要的NuGet包。这一步需要添加的至少有：</p>
+<ol>
+<li>一个主题包。比如Fluent</li>
+<li>Navigation包。这个包包含RadWindow。</li>
+</ol>
+<h1 id="step-3">Step 3</h1>
+<p>添加项目资源。前两个是默认都得添加的，是一些基础的东西。后面的根据你添加的包来添加。比如我们使用了Navigation包，所以添加了Navigation的资源。</p>
+<pre><code class="language-xml">    &lt;Application.Resources&gt;
+        &lt;ResourceDictionary&gt;
+            &lt;ResourceDictionary.MergedDictionaries&gt;
+                &lt;ResourceDictionary Source=&quot;/Telerik.Windows.Themes.Fluent;component/Themes/System.Windows.xaml&quot;/&gt;
+                &lt;ResourceDictionary Source=&quot;/Telerik.Windows.Themes.Fluent;component/Themes/Telerik.Windows.Controls.xaml&quot;/&gt;
+                &lt;ResourceDictionary Source=&quot;/Telerik.Windows.Themes.Fluent;component/Themes/Telerik.Windows.Controls.Navigation.xaml&quot;/&gt;
+            &lt;/ResourceDictionary.MergedDictionaries&gt;
+        &lt;/ResourceDictionary&gt;
+    &lt;/Application.Resources&gt;
+</code></pre>
+<h1 id="step-4">Step 4</h1>
+<p>更改默认的MainWindow。把类型从Window改成RadWindow。两步走，xaml和cs。<br>
+xaml需要注意的是必须添加Style，否则程序运行起来什么都没有。需要使用RadWindowInteropHelper来将程序显示到任务栏。<br>
+cs就很简单了，把继承自window的那点点东西删掉就好了。</p>
+<blockquote>
+<p>为了让反应慢的同学明白，要删掉的东西就是 <code>: Window</code>。</p>
+</blockquote>
+<pre><code class="language-xml">&lt;telerik:RadWindow x:Class=&quot;TelerikTest.MainWindow&quot;
+                   xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+                   xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+                   xmlns:d=&quot;http://schemas.microsoft.com/expression/blend/2008&quot;
+                   xmlns:mc=&quot;http://schemas.openxmlformats.org/markup-compatibility/2006&quot;
+                   xmlns:local=&quot;clr-namespace:TelerikTest&quot;
+                   xmlns:telerik=&quot;http://schemas.telerik.com/2008/xaml/presentation&quot;
+                   xmlns:radWindowHelper=&quot;clr-namespace:Telerik.Windows.Controls.Navigation;assembly=Telerik.Windows.Controls.Navigation&quot;
+                   mc:Ignorable=&quot;d&quot; radWindowHelper:RadWindowInteropHelper.ShowInTaskbar=&quot;True&quot;
+                   Header=&quot;MainWindow&quot; Height=&quot;450&quot; Width=&quot;800&quot; Style=&quot;{StaticResource RadWindowStyle}&quot;&gt;
+    &lt;Grid&gt;
+        
+    &lt;/Grid&gt;
+&lt;/telerik:RadWindow&gt;
+</code></pre>
+<h1 id="step-5">Step 5</h1>
+<p>改造启动类App。依旧是两步走。<br>
+xaml中删掉StartUri。<br>
+cs中添加如下代码：</p>
+<pre><code class="language-c#">        protected override void OnStartup(StartupEventArgs e)
+        {
+            var window = new MainWindow();
+            window.Show();
+        }
+</code></pre>
+<h1 id="搞定">搞定</h1>
+<p>F5跑起来就行了。需要注意的是每个主题都有自己的特色。需要仔细的去阅读一下Themes Suite。否则用起来四不像就很尴尬了。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[WPF 自定义Panel以及实现IScrollInfo以支持ScrollViewer]]></title>
+        <id>https://www.avaloninparadise.cn/post/wpf-zi-ding-yi-panel-yi-ji-shi-xian-iscrollinfo-yi-zhi-chi-scrollviewer/</id>
+        <link href="https://www.avaloninparadise.cn/post/wpf-zi-ding-yi-panel-yi-ji-shi-xian-iscrollinfo-yi-zhi-chi-scrollviewer/">
+        </link>
+        <updated>2020-01-08T05:37:15.000Z</updated>
+        <content type="html"><![CDATA[<p>本文主要介绍了一下内容。</p>
+<ol>
+<li>什么是Panel。为什么要使用自定义Panel。</li>
+<li>如何实现自动一Panel。</li>
+<li>如何实现IScrollInfo。</li>
+</ol>
+<h2 id="什么是panel">什么是Panel</h2>
+<p>下图为官方文档中给出的Panel继承关系。<br>
+<img src="https://www.avaloninparadise.cn/post-images/1578462264146.png" alt="Panel的继承关系" loading="lazy"><br>
+我们可以看到，Panel是日常使用的布局类的基类。在WPF中，使用Panel类来对界面进行布局。</p>
+<h2 id="为什么要使用自定义panel">为什么要使用自定义Panel</h2>
+<p>在上面的Panel继承关系图中我们可以看到，默认提供的布局类是有限的。如果他们满足不了我们的布局需求，我们就需要自定义Panel。比如，实现文件浏览器中平铺的布局。</p>
+<h2 id="如何实现自定义panel">如何实现自定义Panel</h2>
+<p>首先需要知道一个Panel的完整布局过程。<br>
+<img src="https://www.avaloninparadise.cn/post-images/1578463198629.png" alt="Panel布局时序" loading="lazy"><br>
+如图，在父节点决定重新布局时，会进行一系列的操作。对于Panel而言，核心的是两个步骤。这两个步骤的实现是通过两个核心的方法实现的，<a href="https://docs.microsoft.com/en-us/dotnet/api/system.windows.frameworkelement.measureoverride?view=netframework-4.8#System_Windows_FrameworkElement_MeasureOverride_System_Windows_Size_"><code>MeasureOverride</code></a>以及<a href="https://docs.microsoft.com/en-us/dotnet/api/system.windows.frameworkelement.arrangeoverride?view=netframework-4.8#System_Windows_FrameworkElement_ArrangeOverride_System_Windows_Size_"><code>ArrangeOverride</code></a>。</p>
+<h3 id="测量measure">测量Measure</h3>
+<p>这一步是对自身大小进行一个预估。</p>
+<pre><code class="language-c#">Size MeasureOverride(Size availableSize)
+</code></pre>
+<p><code>MeasureOverride</code>的唯一参数是<code>Size</code>类型的，这个参数代表着上层预计给你的布局空间。也就是说，预估情况下，你能够使用的大小。比如<code>ContentControl</code>这种承载类的控件，会给你一个无限大的范围，由你自身计算你会使用的大小，返回给上层。</p>
+<blockquote>
+<p>这里虽然给你一个大小无限的参数，但是你却不能返回一个大小无限的Size。</p>
+</blockquote>
+<p>那么如何进行自身使用大小的计算呢？简单来说，就是问一下Panel自身承载的所有控件需要的大小，然后对这些控件按布局排列之后，需要的大小就是自身的大小。</p>
+<blockquote>
+<p>举个例子，StackPanel纵向排列的情况下，有4个预计大小为400 * 300的Children。那么这个Panel本身需要的大小就是400 * 1200。这个1200 = 300 * 4，因为是纵向排列。如果换成横向排列，那么需要的大小是1600 * 300。</p>
+</blockquote>
+<p>通常情况下，你的MeasureOverride会写成这个样子。</p>
+<pre><code class="language-c#">        protected override Size MeasureOverride(Size availableSize)
+        {
+            var result = new Size();
+            foreach (UIElement child in InternalChildren)
+            {
+                //询问包含的控件需要的大小。预期的大小会保存在DesiredSize中。
+                child.Measure(availableSize);
+                //根据布局方式，计算实际使用的大小。这一部分根据你的需求进行编写
+                result.Width = Math.Max(result.Width, child.DesiredSize.Width);
+                result.Height += child.DesiredSize.Height;
+            }
+            return result;
+        }
+</code></pre>
+<h3 id="布局arrange">布局Arrange</h3>
+<p>这一步是对控件进行布局，会实际应用到界面上。上一步只是进行一个预估，如果你的上一步乱写，而你在这一步进行了正确的布局，你也很大概率会得到一个正确的界面布局。</p>
+<pre><code class="language-c#">Size ArrageOverride(Size finalSize)
+</code></pre>
+<p>同Measure，这一步的finalSize是你实际布局时可以用的大小。<strong>通常情况</strong>下不会是无限大。而且这个大小会跟上一步有管关，有时就直接是上一步的返回值。同样的，这个函数的返回值就是Panel在界面上的最终大小。<br>
+在这一步，你需要做的是根据可用大小，以及每个控件希望的大小，来对控件进行布局。<br>
+通常情况下，你的函数会写得像这样。</p>
+<pre><code class="language-c#">        protected override Size ArrangeOverride(Size availableSize)
+        {
+            var result = new Size();
+            var offset = new Point();
+            foreach (UIElement child in InternalChildren)
+            {
+                //根据布局方式计算出当前控件的布局位置
+                var rect = new Rect(offset, child.DesiredSize);
+                offset.Y += rect.Height;
+                // 计算完成后应该更新最终要使用的大小
+                result.Height += rect.Height;
+                
+                //布局控件
+                child.Arrange(rect);
+            }
+            return result;
+        }
+</code></pre>
+<h2 id="实现iscrollinfo">实现IScrollInfo</h2>
+<p>按照之前的步骤进行，我们就能实现一个可用的自定义Panel。不过一旦我们将Panel置于<code>ScrollViewer</code>中，我们会发现Panel会产生很诡异的布局，甚至可能会直接运行时报错。这是因为<code>ScrollViewer</code>的特殊性。该控件认为其内部能够承载无限大的控件，但是可视区域有限。通过滚动条来调整可视区域以观察内部承载的内容。所以，<code>MeasureOverride</code>以及<code>ArrageOverride</code>都会收到无限大的参数。这时候我们的布局计算就很难进行，因为我们并不知道可视区域在哪。此时，我们需要实现<code>IScrollInfo</code>来支持<code>ScrollViewer</code>。<br>
+<img src="https://www.avaloninparadise.cn/post-images/1579154053887.png" alt="IScrollInfo" loading="lazy"><br>
+如上图，<code>IScrollInfo</code>还是算一个比较大的接口。所以让我们来对其进行一下分类整理。<br>
+从属性上来看，有好几个成对出现的。唯一一个单独的就是<code>ScrollOwner</code>，这个很好理解。之前也解释过，为什么需要用到<code>IScrollInfo</code>，就是为了支持<code>ScrollViewer</code>。所以这里的<code>ScrollOwner</code>就是Host。</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>属性1</th>
+<th>属性2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extent</td>
+<td>ExtentWidth</td>
+<td>ExtentHeight</td>
+</tr>
+<tr>
+<td>Viewport</td>
+<td>ViewportWidth</td>
+<td>ViewportHeight</td>
+</tr>
+<tr>
+<td>Offset</td>
+<td>HorizontalOffset</td>
+<td>VerticalOffset</td>
+</tr>
+<tr>
+<td>CanScroll</td>
+<td>CanHorizontallyScroll</td>
+<td>CanVerticallyScroll</td>
+</tr>
+</tbody>
+</table>
+<p>首先需要明确一件事，这些属性到底是给谁用的。答案是，这些属性都是给<code>ScrollViewer</code>用的。没有这些属性，我们也能完成控件的布局。这些属性都是为了正确地显示滚动条而存在的。故，每次更改这些值之后，需要调用<code>ScrollOwner.InvalidateScrollInfo()</code>来通知<code>ScrollViewer</code>更新滚动条。<br>
+首先最好理解的就是CanScroll的这一对了。很直白。就是能不能在某个方向上进行滚动。<br>
+剩下的三对属性其实是组合使用的。<strong>Extent表示实际内容的大小，Viewport表示可视区域的大小，Offset表示可视区域的偏移量。</strong><br>
+<img src="https://www.avaloninparadise.cn/post-images/1579156736387.png" alt="示意图" loading="lazy"><br>
+如图所示，假设我们有四个控件，都是400*350的大小,可视区域也是400*350，已经将可视区域滚动到显示第二个控件。那么我们的Extent的大小就是400*1400，Viewport是400*350，Offset是0*350。是不是能够理解这三对属性了呢。<br>
+我们的<code>ArrangeOverride</code>也需要进行一些调整。<strong>对控件进行布局的时候，需要减去Offset</strong>。对于上面的一张图，控件分别的布局是：</p>
+<ol>
+<li><code>control1.Arrage(new Rect(0 - HorizontalOffset, 0 - VerticalOffset, 400, 350));</code></li>
+<li><code>control2.Arrage(new Rect(0 - HorizontalOffset, 350 - VerticalOffset, 400, 350));</code></li>
+<li><code>control3.Arrage(new Rect(0 - HorizontalOffset, 700 - VerticalOffset, 400, 350));</code></li>
+<li><code>control4.Arrage(new Rect(0 - HorizontalOffset, 1050 - VerticalOffset, 400, 350));</code><br>
+然后是，在完成布局后，更新Extent以及Viewport的值。</li>
+</ol>
+<blockquote>
+<p>这里其实还需要判断Offset是否超界，超界后应对其校正。</p>
+</blockquote>
+<p>那么剩下的方法其实就很好处理了。无非就是更改Offset，然后重新布局。以<code>LineUp</code>为例：</p>
+<pre><code class="language-c#">public void LineUp()
+{
+    _offset += new Vector(0, -20);
+    //校正Offset以避免超界
+    CorrectOffset();
+    InvalidateArrange();
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[WPF使用IDataErrorInfo接口进行数据校验]]></title>
+        <id>https://www.avaloninparadise.cn/post/wpf-shi-yong-idataerrorinfo-jie-kou-jin-xing-shu-ju-xiao-yan/</id>
+        <link href="https://www.avaloninparadise.cn/post/wpf-shi-yong-idataerrorinfo-jie-kou-jin-xing-shu-ju-xiao-yan/">
+        </link>
+        <updated>2019-10-22T07:22:52.000Z</updated>
+        <content type="html"><![CDATA[<pre><code class="language-cs">    class ValidationBindableBase : BindableBase, IDataErrorInfo
+    {
+        public string this[string columnName]
+        {
+            get
+            {
+                if (_errorMap.ContainsKey(columnName))
+                {
+                    var error = _errorMap[columnName];
+                    _errorMap.Remove(columnName);
+
+                    return error;
+                }
+                return null;
+            }   
+        }
+
+        public string Error =&gt; string.Join(&quot;\n&quot;,_errorMap.Values);
+
+        private readonly Dictionary&lt;string, string&gt; _errorMap = new Dictionary&lt;string, string&gt;();
+
+
+        protected override bool SetProperty&lt;T&gt;(ref T storage, T value, [CallerMemberName]string propertyName = null)
+        {
+            var result = base.SetProperty(ref storage, value, propertyName);
+            var type = this.GetType();
+            foreach (var methodInfo in type.GetMethods())
+            {
+                if (methodInfo.Name == propertyName + &quot;Validation&quot;&amp;&amp; methodInfo.ReturnType == typeof(string) &amp;&amp; methodInfo.GetParameters().Length == 0)
+                {
+                    _errorMap.Add(propertyName,(string)methodInfo.Invoke(this, null));
+                }
+            }
+            return result;
+        }
+    }
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[WPF RoutedEvent and HitTest]]></title>
+        <id>https://www.avaloninparadise.cn/post/wpf-routedevent-and-hittest/</id>
+        <link href="https://www.avaloninparadise.cn/post/wpf-routedevent-and-hittest/">
+        </link>
+        <updated>2019-10-22T07:22:31.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>学习的时候切忌心浮气躁，慢慢的过每一个知识点，不要漏掉任何细节。不然当遇到细节问题的时候，会恼，会闹，会悔不该当初——花一下午调bug最后只改了一个参数有感。</p>
+</blockquote>
+<p>相信很多用过WPF的人都知道WPF中的路由事件。一般看书的话，这个知识点也会在前几章讲到。总的来说，也就是</p>
+<ul>
+<li>WPF的控件都存在于一颗Visual tree当中。</li>
+<li>事件在控件中的传递，其实也就是事件在Visual tree中的传递</li>
+<li>隧道事件从上往下，由树根开始向叶子传播</li>
+<li>冒泡事件从下往上，由子节点开始向根传播</li>
+</ul>
+<p>假设我们有一个Visual tree长这样：</p>
+<pre><code>MainWindow    
+|_Border
+  |_Grid
+    |_TextBlock
+</code></pre>
+<p>那么如果用户点击了<code>TextBlock</code>。那么会产生什么事件，然后会怎么传递呢？<br>
+答案是</p>
+<ol>
+<li>会产生<code>PreviewMouseDown</code>和<code>MouseDown</code>事件</li>
+<li><code>PreviewMouseDown</code>是隧道事件，事件的顺序是<code>MainWindow</code>-&gt;<code>Border</code>-&gt;<code>Grid</code>-&gt;<code>TextBlock</code></li>
+<li><code>MouseDown</code>是冒泡事件，事件的顺序与之前相反，是<code>TextBlock</code>-&gt;<code>Grid</code>-&gt;<code>Border</code>-&gt;<code>MainWindow</code></li>
+</ol>
+<blockquote>
+<p>Tips:<br>
+如何查看WPF中的事件？有一个开源工具<a href="https://github.com/cplotts/snoopwpf">snoop</a>可以帮助你。下图是一个实际示例，UI结构以及操作和上述一致。<br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-850a7e65284915a5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="example" loading="lazy"></p>
+</blockquote>
+<p>好，我们再看一个例子。</p>
+<pre><code>MainWindow    
+|_Border
+  |_Grid
+    |_TextBlock(Margin=&quot;32&quot;)
+</code></pre>
+<p>和上个例子不同的地方在于，我们把<code>TextBlock</code>的边距扩大了。这就意味着，我们可以点击在<code>TextBlock</code>的边距上，那么会发生什么呢？先自己想想哦。<br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-ab2f03b76a086920.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="正确答案" loading="lazy"></p>
+<blockquote>
+<p>注意这里的border是window中自带的，不是我们自己声明的。所以正确答案是，只传播到了<code>MainWindow</code>。为了区别，我给声明的<code>Border</code>随便起了个名字。</p>
+</blockquote>
+<p>要是答对了的同学，那不是一般的棒！<br>
+我们这里有两个问题：</p>
+<ol>
+<li><code>PreviewMouseDown</code>只传递到了<code>MainWindow</code>。作为一个隧道事件，没有继续往下传递。</li>
+<li>触发事件的是<code>MainWindow</code>，不是<code>Border</code>也不是<code>Grid</code>。</li>
+</ol>
+<p>先解答第一个问题。路由事件的准确触发顺序应该是</p>
+<ol>
+<li>隧道事件从根开始，传播到产生事件的控件为止。如果中间有控件处理(<code>e.Handled = true</code>)掉，就停止传播。</li>
+<li>冒泡事件从产生事件的控件开始，传播到根节点为止。如果中间有控件处理(<code>e.Handled = true</code>)掉，就停止传播。</li>
+<li>系统提供的Preview事件先触发。如果被处理(<code>e.Handled = true</code>)掉，不会在产生对应的冒泡事件。</li>
+</ol>
+<p>第二个问题就很恼人了。总的来说就是</p>
+<ul>
+<li>如果没有控件没有被渲染，那么该控件不能被HitTest，也不能被路由事件触发。（参见<a href="https://stackoverflow.com/questions/6395525/previewmousedown-not-tunnelling-as-expected">这里</a>）<br>
+也就是说，<code>Border</code>和<code>Grid</code>没能触发，是因为他们没有<code>Background</code>，没有被渲染。如果加上，即使你加的是<code>TransParent</code>，也会有效。<br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-5ee4a346b277004f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="添加了TransParent为Border的背景" loading="lazy"><br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-0a30383362314ca1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="添加了TransParent为Grid的背景" loading="lazy"></li>
+</ul>
+<p>也就是说，如果你希望下面的控件能够触发事件。那么让上面的控件不能被HitTest就可以了。我今天遇到的坑是，上面一层自己画的一个框，用的函数是</p>
+<pre><code class="language-cs">dc.DrawGeometry(Brushes.Transparent, new Pen(brush, GraphicsLineWidth), PathGeometry);
+</code></pre>
+<p>改成</p>
+<pre><code class="language-cs">dc.DrawGeometry(null, new Pen(brush, GraphicsLineWidth), PathGeometry);
+</code></pre>
+<p>就好了。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[使用Infragistics WPF controls遇到BaseOn问题]]></title>
+        <id>https://www.avaloninparadise.cn/post/shi-yong-infragistics-wpf-controls-yu-dao-baseon-wen-ti/</id>
+        <link href="https://www.avaloninparadise.cn/post/shi-yong-infragistics-wpf-controls-yu-dao-baseon-wen-ti/">
+        </link>
+        <updated>2019-10-22T07:21:45.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="问题描述">问题描述</h1>
+<p>WPF程序中使用Infragistics的控件，需要对控件进行全局的属性设置。一般来说，会想到使用BaseOn默认的Style来进行设置。但是Infragistics使用BaseOn会导致Style直接丢失。特别是在使用了其提供的主题的情况下（废话，不适用主题用它控件干嘛）。</p>
+<h1 id="问题分析">问题分析</h1>
+<h3 id="常规baseon写法">常规BaseOn写法</h3>
+<p>下面的代码对Button进行了背景色设置。由于没有指定Key，如果放在App.xaml中，会对全局程序生效。</p>
+<pre><code class="language-xaml">&lt;Style TargetType=&quot;Button&quot; BaseOn=&quot;{StaticResource {x:Type Button}}&quot;&gt;
+    &lt;Setter Property=&quot;Background&quot; Value=&quot;Red&quot;/&gt;
+&lt;/Style&gt;
+</code></pre>
+<h3 id="同样的写法用于infragistics控件">同样的写法，用于Infragistics控件</h3>
+<p>下面代码对ColorPicker是否显示RecentColor进行设置。</p>
+<pre><code class="language-xaml">&lt;Window x:Class=&quot;WpfApp1.MainWindow&quot;
+        xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+        xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        xmlns:d=&quot;http://schemas.microsoft.com/expression/blend/2008&quot;
+        xmlns:mc=&quot;http://schemas.openxmlformats.org/markup-compatibility/2006&quot;
+        xmlns:ig=&quot;http://schemas.infragistics.com/xaml&quot;
+        xmlns:local=&quot;clr-namespace:WpfApp1&quot;
+        mc:Ignorable=&quot;d&quot;
+        Title=&quot;MainWindow&quot; Height=&quot;450&quot; Width=&quot;800&quot;&gt;
+    &lt;Window.Resources&gt;
+        &lt;Style TargetType=&quot;{x:Type ig:XamColorPicker}&quot; BasedOn=&quot;{StaticResource {x:Type ig:XamColorPicker}}&quot;&gt;
+            &lt;Setter Property=&quot;ShowRecentColorsPalette&quot; Value=&quot;false&quot;/&gt;
+        &lt;/Style&gt;
+    &lt;/Window.Resources&gt;
+    &lt;Grid&gt;
+        &lt;ig:XamColorPicker MinWidth=&quot;80&quot; HorizontalAlignment=&quot;Center&quot; VerticalAlignment=&quot;Center&quot;/&gt;
+    &lt;/Grid&gt;
+&lt;/Window&gt;
+</code></pre>
+<p>当然，需要先在App.xaml.cs中设置主题。</p>
+<pre><code class="language-cs">    public partial class App : Application
+    {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            ThemeManager.ApplicationTheme = new RoyalDarkTheme();
+            base.OnStartup(e);
+        }
+    }
+</code></pre>
+<p><img src="https://upload-images.jianshu.io/upload_images/1802880-d77774385a41fab4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="运行效果" loading="lazy"><br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-a10a7c8f92540f8f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="预期结果" loading="lazy"></p>
+<h1 id="解决方案">解决方案</h1>
+<p><code>ThemeManager</code>中提供一个<code>RegisterControl</code>方法。我们需要在设置主题前对控件进行注册。修改App.xaml.cs。</p>
+<pre><code class="language-cs">    public partial class App : Application
+    {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            //Added this line
+            ThemeManager.RegisterControl(typeof(XamColorPicker));
+            ThemeManager.ApplicationTheme = new RoyalDarkTheme();
+            base.OnStartup(e);
+        }
+    }
+</code></pre>
+<h1 id="问题分析-2">问题分析</h1>
+<p>To be continue.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[DependencyPropertyChangedCallback造成循环调用的问题]]></title>
+        <id>https://www.avaloninparadise.cn/post/dependencypropertychangedcallback-zao-cheng-xun-huan-diao-yong-de-wen-ti/</id>
+        <link href="https://www.avaloninparadise.cn/post/dependencypropertychangedcallback-zao-cheng-xun-huan-diao-yong-de-wen-ti/">
+        </link>
+        <updated>2019-10-22T07:17:02.000Z</updated>
+        <content type="html"><![CDATA[<p>我学习WPF使用的是《WPF编程宝典》（第四版）。之前读到自定义控件，也就是18.2颜色拾取器的时候，有一句话我深深的记在脑海里。</p>
+<blockquote>
+<p>因为WPF不允许重新进行属性变化回调函数。<br>
+多么智能，多么贴心。为了避免有的人没有看过这本书，我把书里的例子贴在这里。</p>
+</blockquote>
+<pre><code class="language-C#">public class ColorPicker:System.Windows.Controls.UserControl
+{
+    public static DependencyProperty RedProperty;
+    public static DependencyProperty GreenProperty;
+    public static DependencyProperty BlueProperty;
+    public static DependencyProperty ColorProperty;
+
+    static ColorPicker()
+    {
+        ColorProperty = DependencyProperty.Register(&quot;Color&quot;, typeof(Color),
+                typeof(ColorPicker), new FramewrokPropertyMetadata(Colors.Black, new PropertyChangedCallback(OnColorChanged));
+        RedProperty = DependencyProperty.Register(&quot;Red&quot;, typeof(byte),
+                typeof(ColorPicker), new FramewrokPropertyMetadata(new PropertyChangedCallback(OnColorRGBChanged));
+        GreenProperty = DependencyProperty.Register(&quot;Green&quot;, typeof(byte),
+                typeof(ColorPicker), new FramewrokPropertyMetadata(new PropertyChangedCallback(OnColorRGBChanged));
+        BlueProperty = DependencyProperty.Register(&quot;Blue&quot;, typeof(byte),
+                typeof(ColorPicker), new FramewrokPropertyMetadata(new PropertyChangedCallback(OnColorRGBChanged));
+    } 
+
+    public Color Color
+    {
+        get { return (Color)GetValue(ColorProperty); }
+        set { SetValue(ColorProperty, value); }
+    }
+
+    public byte Red
+    {
+        get { return (byte)GetValue(RedProperty); }
+        set { SetValue(RedProperty, value); }
+    }
+
+    public byte Green
+    {
+        get { return (byte)GetValue(GreenProperty); }
+        set { SetValue(GreebProperty, value); }
+    }
+
+    public byte Blue
+    {
+        get { return (byte)GetValue(BlueProperty); }
+        set { SetValue(BlueProperty, value); }
+    }
+ 
+    private static void OnColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        Color newColor = (Color)e.NewValue;
+        Color oldColor = (Color)e.OldValue;
+
+        ColorPicker colorPicker = (ColorPicker)sender;
+        colorPicker.Red = newColor.R;
+        colorPicker.Green = newColor.G;
+        colorPikcer.Blue = newColor.B;
+    }
+
+    private static void OnColorRGBChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        ColorPicker colorPicker = (ColorPicker)sender;
+        Color color = colorPicker.Color;
+
+        if (e.Property == RedProperty)
+            color.R = (byte)e.NewValue;
+        else if (e.Property == GreenProperty)
+            color.G = (byte)e.NewValue;
+        else if (e.Property == BlueProperty)
+            color.B = (byte)e.NewValue;
+
+        colorPicker.Color = color;
+    }
+}
+</code></pre>
+<p>很明显，这段代码是希望在改变RGB的值时，能够更新Color。同时在更新Color时，能够更新RGB。并且，这样写并不会造成循环调用。<br>
+我一直坚信这是WPF内部进行优化，能够保证在任何情况下，callback中对依赖属性进行设置，不会发生循环调用的情况。<br>
+知道今天，我把对应的Color改成了TimeSpan，循环调用发生了。那一刻，我是怀疑人生的。</p>
+<p>先给出结论：<strong>DependencyPropertyChangedCallback中并不会进行什么神奇的操作来规避循环调用。能够规避部分循环调用的原因时，SetValue会对值进行判定，如果值没有发生改变，则不会调用DependencyPropertyChangedCallback。</strong></p>
+<p>为什么改成TimeSpan类型会发生循环调用呢？因为如果把Second赋值一个超过60的数，会进位。感兴趣的朋友可以想想为什么。欢迎留言讨论。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[使用微软提供的Settings以及自定义SettingsProvider]]></title>
+        <id>https://www.avaloninparadise.cn/post/shi-yong-wei-ruan-ti-gong-de-settings-yi-ji-zi-ding-yi-settingsprovider/</id>
+        <link href="https://www.avaloninparadise.cn/post/shi-yong-wei-ruan-ti-gong-de-settings-yi-ji-zi-ding-yi-settingsprovider/">
+        </link>
+        <updated>2019-10-22T07:11:42.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="前言">前言</h1>
+<p>在程序中，难免会用到配置文件。如何处理配置文件问题，有许许多多的解决方案。简单的就是直接在app.config里面加一条，然后读取。复杂一些的，可能需要自己去定义格式，存储位置。微软为我们提供了一个方案，就是在项目中的<code>Settings</code>。<br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-bbfc08a80494db97.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Settings" loading="lazy"></p>
+<h1 id="使用settings">使用Settings</h1>
+<p><code>Settings</code>为我们提供了设置界面，方便操作。使用起来非常简单。<br>
+如果你新建一个WPF项目，模板中其实默认就带有一个<code>Settings</code>文件。就像上一节中的插图一样，展开Proerpties即可见。你也可以像添加一般的类一样添加新的<code>Settings</code>文件，只需要在添加文件的窗口中找到<code>Settings</code>类型，添加即可。<br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-2589526e7f2cfbcf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="添加新的Settings文件" loading="lazy"><br>
+双击<code>Settings</code>文件，进入可视化编辑界面。<br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-59ae020a7d766b6f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="可视化编辑界面" loading="lazy"><br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-68cb99eeca19151b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="类型选择" loading="lazy"><br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-1081d79f56e01259.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="作用范围选择" loading="lazy"></p>
+<p>第一列是设置项的名称。该值作为将来在程序中获取或设置此项设置时的键。<br>
+第二列是设置项的类型。默认有很多的基本类型，注意最有一项，是可以选择自定义类型的。但是也要支持序列化的类型才行，如果是很复杂的类型，需要对其添加序列化和反序列化的方法。<br>
+第三项是设置项的作用范围。只有两种选择，Application和User。如果你选择Application，那么该设置项的值不能被修改。如果你选择User，该设置项可以被修改，但是仅针对于当前计算机用户生效。<br>
+第四项是设置项的默认值。这个没什么好说的，记得默认值要和类型匹配，不然会编译不通过。</p>
+<p>添加完成后，记得点一下保存。VS会帮你生成对应的代码。对应的代码你可以在<code>Settings</code>文件对应的cs文件中找到。<br>
+<img src="https://upload-images.jianshu.io/upload_images/1802880-6627dc5b7899fc55.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="生成的代码位置" loading="lazy"><br>
+单项设置对应的代码：</p>
+<pre><code class="language-c#">        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(&quot;123&quot;)]
+        public string Setting {
+            get {
+                return ((string)(this[&quot;Setting&quot;]));
+            }
+            set {
+                this[&quot;Setting&quot;] = value;
+            }
+        }
+</code></pre>
+<p>截图中的设置生成的对应代码：</p>
+<pre><code class="language-c#">    [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute(&quot;Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator&quot;, &quot;15.9.0.0&quot;)]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
+        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+        
+        public static Settings Default {
+            get {
+                return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(&quot;123&quot;)]
+        public string Setting {
+            get {
+                return ((string)(this[&quot;Setting&quot;]));
+            }
+            set {
+                this[&quot;Setting&quot;] = value;
+            }
+        }
+    }
+</code></pre>
+<p>在CS中使用设置就更简单了。</p>
+<pre><code class="language-c#">        static void Main(string[] args)
+        {
+            //读取设置
+            var t = Properties.Settings.Default.Setting;
+            Console.WriteLine(t);
+            //更新设置
+            Properties.Settings.Default.Setting = &quot;6666666&quot;;
+            //保存设置
+            Properties.Settings.Default.Save();
+        }
+</code></pre>
+<p>如何使用到此结束。</p>
+<h1 id="工作流程及原理简述">工作流程及原理简述</h1>
+<ol>
+<li>可视化界面添加需要的设置项。保存时会生成对应的cs文件，同时，会有对应的xml内容写入app.config。</li>
+<li>执行到读取设置时，会根据设置项的作用范围，去读取不同的配置文件。如果没有读取到值，会返回默认值。执行到写入设置时，由于只有User的类型才能写入，系统会调用默认的LocalFileSettingsProvider保存到当前用户的AppData\Local\{ApplicationName}\{Version}\{ApplicationName+LocationHashValue}。</li>
+</ol>
+<p>原理其实非常简单。每次读或写都生成一个<code>SettingsProvider</code>的实例，然后通过这个实例进行读或者写。你可以通过添加属性来指定<code>SettingsProvider</code>的类型。默认会使用<code>LocalFileSettingsProvider</code>。由于<code>LocalFileSettingsProvider</code>没有提供修改保存路径的方法，我们需要自定义<code>SettingsProvider</code>来修改保存路径。需要将<code>[SettingsProvider(typeof(CustomProvider))]</code>添加到生成的cs类上。</p>
+<blockquote>
+<p>微软表示不提供路径修改是出于安全考虑。具体的内容请自行参阅官方文档。</p>
+</blockquote>
+<h1 id="自定义settingsprovider">自定义SettingsProvider</h1>
+<p>直接提供给大家一个可以用的。讲解我放在后面。这个类是拔微软源码做的。</p>
+<pre><code class="language-cs">    [
+         PermissionSet(SecurityAction.LinkDemand, Name = &quot;FullTrust&quot;),
+         PermissionSet(SecurityAction.InheritanceDemand, Name = &quot;FullTrust&quot;)
+    ]
+    public class CustomSettingsProvider : SettingsProvider
+    {
+        private const string UserSettingsGroupName = &quot;userSettings&quot;;
+        private string _applicationName;
+        public override string ApplicationName { get =&gt; _applicationName; set =&gt; _applicationName = value; }
+
+        public override void Initialize(string name, NameValueCollection values)
+        {
+            if (String.IsNullOrEmpty(name))
+            {
+                name = &quot;CustomProvider&quot;;
+            }
+
+            base.Initialize(name, values);
+        }
+
+        private Configuration configuration;
+
+        private void Open()
+        {
+            var fileMap = new ExeConfigurationFileMap
+            {
+                ExeConfigFilename = $&quot;{_applicationName}.exe.config&quot;,
+                RoamingUserConfigFilename = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + &quot;\\&quot; + _applicationName + &quot;\\Settings\\user.config&quot;
+            };
+            configuration = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.PerUserRoaming);
+        }
+
+        [
+         FileIOPermission(SecurityAction.Assert, AllFiles = FileIOPermissionAccess.PathDiscovery | FileIOPermissionAccess.Read),
+         PermissionSet(SecurityAction.LinkDemand, Name = &quot;FullTrust&quot;),
+         PermissionSet(SecurityAction.InheritanceDemand, Name = &quot;FullTrust&quot;)
+        ]
+        public override SettingsPropertyValueCollection GetPropertyValues(SettingsContext context, SettingsPropertyCollection collection)
+        {
+            Open();
+            var settings = ReadSettingsFromFile(GetSectionName(context));
+            var values = new SettingsPropertyValueCollection();
+            foreach (SettingsProperty settingProperty in collection)
+            {
+                var value = new SettingsPropertyValue(settingProperty);
+                if (settings.Contains(settingProperty.Name))
+                {
+                    var ss = (StoredSetting)settings[settingProperty.Name];
+                    var valueString = ss.xmlNode.InnerXml;
+                    if (ss.serializeAs == SettingsSerializeAs.String)
+                    {
+                        valueString = Escaper.Unescape(valueString);
+                    }
+                    value.SerializedValue = valueString;
+                }
+                else if (settingProperty.DefaultValue != null)
+                {
+                    value.SerializedValue = settingProperty.DefaultValue;
+                }
+
+                value.IsDirty = false;
+                values.Add(value);
+            }
+            return values;
+        }
+
+        private XmlEscaper Escaper = new XmlEscaper();
+
+        private IDictionary ReadSettingsFromFile(string sectionName)
+        {
+            IDictionary settings = new Hashtable();
+
+            var sectionGroup = configuration.GetSectionGroup(UserSettingsGroupName);
+            var section = sectionGroup.Sections[sectionName] as ClientSettingsSection;
+            if (section != null)
+            {
+                foreach (SettingElement setting in section.Settings)
+                {
+                    settings[setting.Name] = new StoredSetting(setting.SerializeAs, setting.Value.ValueXml);
+                }
+            }
+
+            return settings;
+        }
+
+        private string GetSectionName(SettingsContext context)
+        {
+            string groupName = (string)context[&quot;GroupName&quot;];
+            string key = (string)context[&quot;SettingsKey&quot;];
+
+            Debug.Assert(groupName != null, &quot;SettingsContext did not have a GroupName!&quot;);
+
+            string sectionName = groupName;
+
+            if (!String.IsNullOrEmpty(key))
+            {
+                sectionName = string.Format(CultureInfo.InvariantCulture, &quot;{0}.{1}&quot;, sectionName, key);
+            }
+
+            return XmlConvert.EncodeLocalName(sectionName);
+        }
+
+        public override void SetPropertyValues(SettingsContext context, SettingsPropertyValueCollection collection)
+        {
+            string sectionName = GetSectionName(context);
+            IDictionary userSettings = new Hashtable();
+            foreach (SettingsPropertyValue value in collection)
+            {
+                SettingsProperty setting = value.Property;
+                if (value.IsDirty)
+                {
+                    StoredSetting ss = new StoredSetting(setting.SerializeAs, SerializeToXmlElement(setting, value));
+                    userSettings[setting.Name] = ss;
+                }
+            }
+            WriteSettings(sectionName, userSettings);
+        }
+
+        private void WriteSettings(string sectionName, IDictionary newSettings)
+        {
+            Open();
+            var section = GetConfigSection(sectionName);
+
+            if (section != null)
+            {
+                SettingElementCollection sec = section.Settings;
+                foreach (DictionaryEntry entry in newSettings)
+                {
+                    SettingElement se = sec.Get((string)entry.Key);
+
+                    if (se == null)
+                    {
+                        se = new SettingElement();
+                        se.Name = (string)entry.Key;
+                        sec.Add(se);
+                    }
+
+                    StoredSetting ss = (StoredSetting)entry.Value;
+                    se.SerializeAs = ss.serializeAs;
+                    se.Value.ValueXml = ss.xmlNode;
+                }
+
+                try
+                {
+                    configuration.Save();
+                }
+                catch (ConfigurationErrorsException ex)
+                {
+                    // We wrap this in an exception with our error message and throw again.
+                    throw new ConfigurationErrorsException($&quot;Save file to {configuration.FilePath} failed&quot;, ex);
+                }
+            }
+            else
+            {
+                throw new ConfigurationErrorsException($&quot;Can not find the section {section} in the setting file&quot;);
+            }
+        }
+
+        private ClientSettingsSection GetConfigSection(string sectionName)
+        {
+            Configuration config = configuration;
+            string fullSectionName = UserSettingsGroupName + &quot;/&quot; + sectionName;
+            ClientSettingsSection section = null;
+
+            if (config != null)
+            {
+                section = config.GetSection(fullSectionName) as ClientSettingsSection;
+
+                if (section == null)
+                {
+                    // Looks like the section isn't declared - let's declare it and try again.
+                    DeclareSection(sectionName);
+                    section = config.GetSection(fullSectionName) as ClientSettingsSection;
+                }
+            }
+
+            return section;
+        }
+
+        // Declares the section handler of a given section in its section group, if a declaration isn't already
+        // present. 
+        private void DeclareSection(string sectionName)
+        {
+            Configuration config = configuration;
+            ConfigurationSectionGroup settingsGroup = config.GetSectionGroup(UserSettingsGroupName);
+
+            if (settingsGroup == null)
+            {
+                //Declare settings group
+                ConfigurationSectionGroup group = new UserSettingsGroup();
+                config.SectionGroups.Add(UserSettingsGroupName, group);
+            }
+
+            settingsGroup = config.GetSectionGroup(UserSettingsGroupName);
+
+            Debug.Assert(settingsGroup != null, &quot;Failed to declare settings group&quot;);
+
+            if (settingsGroup != null)
+            {
+                ConfigurationSection section = settingsGroup.Sections[sectionName];
+                if (section == null)
+                {
+                    section = new ClientSettingsSection();
+                    section.SectionInformation.AllowExeDefinition = ConfigurationAllowExeDefinition.MachineToLocalUser;
+                    section.SectionInformation.RequirePermission = false;
+                    settingsGroup.Sections.Add(sectionName, section);
+                }
+            }
+        }
+
+        private XmlNode SerializeToXmlElement(SettingsProperty setting, SettingsPropertyValue value)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlElement valueXml = doc.CreateElement(&quot;value&quot;);
+
+            string serializedValue = value.SerializedValue as string;
+
+            if (serializedValue == null &amp;&amp; setting.SerializeAs == SettingsSerializeAs.Binary)
+            {
+                // SettingsPropertyValue returns a byte[] in the binary serialization case. We need to
+                // encode this - we use base64 since SettingsPropertyValue understands it and we won't have
+                // to special case while deserializing.
+                byte[] buf = value.SerializedValue as byte[];
+                if (buf != null)
+                {
+                    serializedValue = Convert.ToBase64String(buf);
+                }
+            }
+
+            if (serializedValue == null)
+            {
+                serializedValue = String.Empty;
+            }
+
+            // We need to escape string serialized values
+            if (setting.SerializeAs == SettingsSerializeAs.String)
+            {
+                serializedValue = Escaper.Escape(serializedValue);
+            }
+
+            valueXml.InnerXml = serializedValue;
+
+            // Hack to remove the XmlDeclaration that the XmlSerializer adds. 
+            XmlNode unwanted = null;
+            foreach (XmlNode child in valueXml.ChildNodes)
+            {
+                if (child.NodeType == XmlNodeType.XmlDeclaration)
+                {
+                    unwanted = child;
+                    break;
+                }
+            }
+            if (unwanted != null)
+            {
+                valueXml.RemoveChild(unwanted);
+            }
+
+            return valueXml;
+        }
+
+        private class XmlEscaper
+        {
+            private XmlDocument doc;
+            private XmlElement temp;
+
+            internal XmlEscaper()
+            {
+                doc = new XmlDocument();
+                temp = doc.CreateElement(&quot;temp&quot;);
+            }
+
+            internal string Escape(string xmlString)
+            {
+                if (String.IsNullOrEmpty(xmlString))
+                {
+                    return xmlString;
+                }
+
+                temp.InnerText = xmlString;
+                return temp.InnerXml;
+            }
+
+            internal string Unescape(string escapedString)
+            {
+                if (String.IsNullOrEmpty(escapedString))
+                {
+                    return escapedString;
+                }
+
+                temp.InnerXml = escapedString;
+                return temp.InnerText;
+            }
+        }
+    }
+    internal class StoredSetting
+    {
+        public StoredSetting(SettingsSerializeAs serializeAs, XmlNode xmlNode)
+        {
+            this.serializeAs = serializeAs;
+            this.xmlNode = xmlNode;
+        }
+        internal SettingsSerializeAs serializeAs;
+        internal XmlNode xmlNode;
+    }
+</code></pre>
+<p>主要的地方在于继承<code>SettingsProvider</code>然后实现两个必须实现的方法，分别是<code>public override SettingsPropertyValueCollection GetPropertyValues(SettingsContext context, SettingsPropertyCollection collection)</code>和<code>public override void SetPropertyValues(SettingsContext context, SettingsPropertyValueCollection collection)</code>。这两个方法会在读和写的时候被调用。之前也提到过，每次读写，都会生成一个新的<code>SettingsProvider</code>的实例，这点需要注意。其中，ApplicationName是在工程设置里Assmebly Information中的值。<br>
+可能解释得不是很清楚，有什么问题欢迎留言。当然，更推荐去看<code>LocalFileSettingsProvider</code>的源码。</p>
+]]></content>
+    </entry>
+</feed>
