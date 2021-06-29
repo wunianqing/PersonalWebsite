@@ -159,42 +159,103 @@
         <article class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 col-xs-offset-0">
             <figure class="animate-box">
                 
-                    <img src="https://www.avaloninparadise.cn/post-images/xian-che.jpg" alt="闲扯" class="img-responsive">
+                    <img src="https://www.avaloninparadise.cn/post-images/shi-yong-wei-ruan-ti-gong-de-settings-yi-ji-zi-ding-yi-settingsprovider.jpg" alt="ProgressBar滚动动画以及关闭CommonFileDialog的方式" class="img-responsive">
                 
             </figure>
             <span class="fh5co-meta animate-box">
                 
                     <div class="tag-container">
                         
-                            <a href="https://www.avaloninparadise.cn/tag/JmBre727L/" class="tag">杂谈, </a>
+                            <a href="https://www.avaloninparadise.cn/tag/2ttYE691-/" class="tag">代码记录, </a>
                         
                     </div>
                 
             </span>
-            <h2 class="fh5co-article-title animate-box">闲扯</h2>
+            <h2 class="fh5co-article-title animate-box">ProgressBar滚动动画以及关闭CommonFileDialog的方式</h2>
             <ol class="breadcrumb fh5co-meta fh5co-date animate-box" style="margin-bottom:0; background-color:#f8f9fa">
-                <li>2020-08-31</li>
-                <li>893字</li>
-                <li>4 min read</li>
+                <li>2020-12-14</li>
+                <li>359字</li>
+                <li>3 min read</li>
             </ol>
 
             <div class="col-lg-12 col-lg-offset-0 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0 text-left content-article">
                 <div class="row">
                     <div class="col-md-12 animate-box post-content">
-                        <p> <p>今天又折腾起了博客。这不是第一次干，多半也不是最后一次。想想之前，用过CSDN，后来到了简书，再之后弄了Github Page。总是感觉，啊，用现成的总是差了点味道。所以中间又想着自己操刀，打一个博客网站。不光是想，其实也做了。只不过每次都是开个头，然后就没有然后了。甚至于写网站的方式，从asp到asp core，再到golang。然而没有一个出成果了。大抵我就是这么个人吧，什么都想搞一搞，什么都搞不出来……<br>
-两周前吧，华为约我。想了想，反正没什么事，试试呗。但是招的岗位都是C++的，而C++实在是工作中用的不多，用的也不深。还是得捡一捡，于是就在B站找了个视频看，是个老外的视频。又一次感受到了英语的重要，至少我不用像弹幕里面的那些人一样，有事没事求字幕。本质上我是抵制学习去看视频的，无他，效率太低。大部分的视频，都是在水时间，整理成文档，也许你只用视频1/3的时间就能看完。然而不得不说，觉得视频不行，大概是因为我接触的视频质量都太差，跟视频这种信息传递方式无关。这个系列视频我认认真真看到了最后，呵呵，为数不多完成度100%的项目。生活就是这么的有意思，总是想着法地刷新你的认知。你以为视频教学不行，啪啪啪打脸；你以为自己不会坚持做完一件事，啪啪啪打脸。最后，C++能在两个周捡起来，算法，准确的说是刷题的那种感觉，两周却是找不回来。于是乎，机试没过，为此无能狂怒了一天。隔天想了想，机会总是给有准备的人的，而在这个快节奏的时代，你只能时刻准备着。<br>
-痛定思痛，觉得坚持不下来，还是缺乏监督。这就是为啥今天又折腾起博客。指望别人监督是不太可能，也就只能往博客上记录一下。对了，今天给博客换了个主题，这个主题有一个很有意思的地方，就是你不给文章上封面，那么首页就很难看。为此我得去多准备写好看点的图，至少得是不那么难看的图。下班路上，就多留意了一些。生活中果然是不缺少美，只是缺少发现美的眼睛，还是拍到了好几张照片。也可能是魔都规划不错，稍微找找角度，拍下来的都不会难看。希望能以此为契机，把拍照也练练吧。不过安卓的拍照实在是，一言难尽。嗯，又扯远了。还是得做点规划，做到时刻准备着。不说等着什么好机会吧，至少得有点进步。所以，</p>
-<ol>
-<li>Cherno还有两个系列，OpenGL和游戏引擎。慢慢往后看。</li>
-<li>英语还是差得远。今天买了个TypeC的拓展坞，拿来接键盘背单词。</li>
-</ol>
-<p>先就这样吧，看看晚上时间够不够，要是够就再添个锻炼项目。一周后再来写一篇闲扯吧，写闲扯也是花时间的。虽然也蛮有一次，但是总不能写日记吧，正经人谁写日记啊，摊手。</p>
+                        <p> <h1 id="progressbar动画">ProgressBar动画</h1>
+<p>这里的动画是指最基本的一个长条从左往右滚动的那种。</p>
+<pre><code class="language-xaml">    &lt;Window.Resources&gt;
+        &lt;Storyboard x:Key=&quot;OnLoaded&quot;&gt;
+            &lt;DoubleAnimationUsingKeyFrames RepeatBehavior=&quot;Forever&quot; Storyboard.TargetProperty=&quot;(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)&quot; Storyboard.TargetName=&quot;border&quot;&gt;
+                &lt;LinearDoubleKeyFrame KeyTime=&quot;0&quot; Value=&quot;0.25&quot;/&gt;
+                &lt;LinearDoubleKeyFrame KeyTime=&quot;0:0:1&quot; Value=&quot;0.25&quot;/&gt;
+                &lt;LinearDoubleKeyFrame KeyTime=&quot;0:0:2&quot; Value=&quot;0.25&quot;/&gt;
+            &lt;/DoubleAnimationUsingKeyFrames&gt;
+            &lt;PointAnimationUsingKeyFrames RepeatBehavior=&quot;Forever&quot; Storyboard.TargetProperty=&quot;(UIElement.RenderTransformOrigin)&quot; Storyboard.TargetName=&quot;border&quot;&gt;
+                &lt;LinearPointKeyFrame KeyTime=&quot;0&quot; Value=&quot;-0.5,0.5&quot;/&gt;
+                &lt;LinearPointKeyFrame KeyTime=&quot;0:0:1&quot; Value=&quot;0.5,0.5&quot;/&gt;
+                &lt;LinearPointKeyFrame KeyTime=&quot;0:0:2&quot; Value=&quot;1.5,0.5&quot;/&gt;
+            &lt;/PointAnimationUsingKeyFrames&gt;
+        &lt;/Storyboard&gt;
+    &lt;/Window.Resources&gt;
+    &lt;Border Name=&quot;border&quot; Background=&quot;Red&quot;&gt;
+        &lt;Border.RenderTransform&gt;
+            &lt;TransformGroup&gt;
+                &lt;ScaleTransform/&gt;
+            &lt;/TransformGroup&gt;
+        &lt;/Border.RenderTransform&gt;
+    &lt;/Border&gt;
+</code></pre>
+<h1 id="关闭commonfiledialog">关闭CommonFileDialog</h1>
+<pre><code class="language-c#">    static class DialogCloser
+    {
+        public static void Close()
+        {
+            // Enumerate windows to find dialogs
+            EnumThreadWndProc callback = new EnumThreadWndProc(checkWindow);
+            EnumThreadWindows(GetCurrentThreadId(), callback, IntPtr.Zero);
+            GC.KeepAlive(callback);
+        }
+
+        private static bool checkWindow(IntPtr hWnd, IntPtr lp)
+        {
+            // Checks if &lt;hWnd&gt; is a Windows dialog
+            StringBuilder sb = new StringBuilder(260);
+            GetClassName(hWnd, sb, sb.Capacity);
+            if (sb.ToString() == &quot;#32770&quot;)
+            {
+                // Close it by sending WM_CLOSE to the window
+                SendMessage(hWnd, 0x0010, IntPtr.Zero, IntPtr.Zero);
+            }
+            return true;
+        }
+
+        // P/Invoke declarations
+        private delegate bool EnumThreadWndProc(IntPtr hWnd, IntPtr lp);
+        [DllImport(&quot;user32.dll&quot;)]
+        private static extern bool EnumThreadWindows(int tid, EnumThreadWndProc callback, IntPtr lp);
+        [DllImport(&quot;kernel32.dll&quot;)]
+        private static extern int GetCurrentThreadId();
+        [DllImport(&quot;user32.dll&quot;)]
+        private static extern int GetClassName(IntPtr hWnd, StringBuilder buffer, int buflen);
+        [DllImport(&quot;user32.dll&quot;)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+    }
+</code></pre>
  </p>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12 animate-box">
+                        
+                            <div class="next-post">
+                                <div class="next">下一篇</div>
+                                <a href="https://www.avaloninparadise.cn/post/shi-yong-roslyn-wei-mei-ge-han-shu-tian-jia-dai-ma/">
+                                    <h3 class="post-title">
+                                        使用ChromeTracing工具协助定位bug
+                                    </h3>
+                                </a>
+                            </div>
                         
                     </div>
                 </div>
@@ -222,11 +283,20 @@
     <!-- 返回顶部 -->
     <div class="back-to-top">
     
+        <a href="#!" id="tool-toc" class="hidden-xs hidden-sm">
+            <i class="fa fa-map"></i>
+        </a>
+        <br>
+    
     <a href="#top" class="hidden-xs hidden-sm"><i class="fa fa-paper-plane"></i></a>
 </div>
 
 <div class="post-toc animated fadeInRight hidden-xs hidden-sm" style="display: none;">
-    
+    <ul class="markdownIt-TOC">
+<li><a href="#progressbar%E5%8A%A8%E7%94%BB">ProgressBar动画</a></li>
+<li><a href="#%E5%85%B3%E9%97%ADcommonfiledialog">关闭CommonFileDialog</a></li>
+</ul>
+
 </div>
 
 

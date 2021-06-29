@@ -2,21 +2,367 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.avaloninparadise.cn</id>
     <title>理想乡</title>
-    <updated>2020-09-23T13:39:33.546Z</updated>
+    <updated>2021-06-29T12:40:15.726Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://www.avaloninparadise.cn"/>
     <link rel="self" href="https://www.avaloninparadise.cn/atom.xml"/>
     <subtitle>远离喧嚣，静下心来感受世界</subtitle>
     <logo>https://www.avaloninparadise.cn/images/avatar.png</logo>
     <icon>https://www.avaloninparadise.cn/favicon.ico</icon>
-    <rights>All rights reserved 2020, 理想乡</rights>
+    <rights>All rights reserved 2021, 理想乡</rights>
     <entry>
-        <title type="html"><![CDATA[使用Roslyn为每个函数添加代码]]></title>
+        <title type="html"><![CDATA[TCP网络编程学习总结]]></title>
+        <id>https://www.avaloninparadise.cn/post/tcp-wang-luo-bian-cheng-xue-xi-zong-jie/</id>
+        <link href="https://www.avaloninparadise.cn/post/tcp-wang-luo-bian-cheng-xue-xi-zong-jie/">
+        </link>
+        <updated>2021-04-27T05:55:56.000Z</updated>
+        <content type="html"><![CDATA[<ol>
+<li>核心模块</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>序列化(Serializer)</td>
+<td>把需要发送的数据序列化成能够在网络上传输的数据格式</td>
+</tr>
+<tr>
+<td>数据连接(e.g. Socket)</td>
+<td>负责收发序列化后的数据</td>
+</tr>
+<tr>
+<td>调度器(Dispatcher)</td>
+<td>把收到的消息对应到需要执行的操作</td>
+</tr>
+<tr>
+<td>连接管理(ConnectionManager)</td>
+<td>负责连接的建立，移除等</td>
+</tr>
+</tbody>
+</table>
+<ol start="2">
+<li>基于上述模块的一个网络编程模型</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://www.avaloninparadise.cn/post-images/1619503368586.png" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ProgressBar滚动动画以及关闭CommonFileDialog的方式]]></title>
+        <id>https://www.avaloninparadise.cn/post/progressbar-gun-dong-dong-hua-yi-ji-guan-bi-commonfiledialog-de-fang-shi/</id>
+        <link href="https://www.avaloninparadise.cn/post/progressbar-gun-dong-dong-hua-yi-ji-guan-bi-commonfiledialog-de-fang-shi/">
+        </link>
+        <updated>2020-12-14T05:59:53.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="progressbar动画">ProgressBar动画</h1>
+<p>这里的动画是指最基本的一个长条从左往右滚动的那种。</p>
+<pre><code class="language-xaml">    &lt;Window.Resources&gt;
+        &lt;Storyboard x:Key=&quot;OnLoaded&quot;&gt;
+            &lt;DoubleAnimationUsingKeyFrames RepeatBehavior=&quot;Forever&quot; Storyboard.TargetProperty=&quot;(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)&quot; Storyboard.TargetName=&quot;border&quot;&gt;
+                &lt;LinearDoubleKeyFrame KeyTime=&quot;0&quot; Value=&quot;0.25&quot;/&gt;
+                &lt;LinearDoubleKeyFrame KeyTime=&quot;0:0:1&quot; Value=&quot;0.25&quot;/&gt;
+                &lt;LinearDoubleKeyFrame KeyTime=&quot;0:0:2&quot; Value=&quot;0.25&quot;/&gt;
+            &lt;/DoubleAnimationUsingKeyFrames&gt;
+            &lt;PointAnimationUsingKeyFrames RepeatBehavior=&quot;Forever&quot; Storyboard.TargetProperty=&quot;(UIElement.RenderTransformOrigin)&quot; Storyboard.TargetName=&quot;border&quot;&gt;
+                &lt;LinearPointKeyFrame KeyTime=&quot;0&quot; Value=&quot;-0.5,0.5&quot;/&gt;
+                &lt;LinearPointKeyFrame KeyTime=&quot;0:0:1&quot; Value=&quot;0.5,0.5&quot;/&gt;
+                &lt;LinearPointKeyFrame KeyTime=&quot;0:0:2&quot; Value=&quot;1.5,0.5&quot;/&gt;
+            &lt;/PointAnimationUsingKeyFrames&gt;
+        &lt;/Storyboard&gt;
+    &lt;/Window.Resources&gt;
+    &lt;Border Name=&quot;border&quot; Background=&quot;Red&quot;&gt;
+        &lt;Border.RenderTransform&gt;
+            &lt;TransformGroup&gt;
+                &lt;ScaleTransform/&gt;
+            &lt;/TransformGroup&gt;
+        &lt;/Border.RenderTransform&gt;
+    &lt;/Border&gt;
+</code></pre>
+<h1 id="关闭commonfiledialog">关闭CommonFileDialog</h1>
+<pre><code class="language-c#">    static class DialogCloser
+    {
+        public static void Close()
+        {
+            // Enumerate windows to find dialogs
+            EnumThreadWndProc callback = new EnumThreadWndProc(checkWindow);
+            EnumThreadWindows(GetCurrentThreadId(), callback, IntPtr.Zero);
+            GC.KeepAlive(callback);
+        }
+
+        private static bool checkWindow(IntPtr hWnd, IntPtr lp)
+        {
+            // Checks if &lt;hWnd&gt; is a Windows dialog
+            StringBuilder sb = new StringBuilder(260);
+            GetClassName(hWnd, sb, sb.Capacity);
+            if (sb.ToString() == &quot;#32770&quot;)
+            {
+                // Close it by sending WM_CLOSE to the window
+                SendMessage(hWnd, 0x0010, IntPtr.Zero, IntPtr.Zero);
+            }
+            return true;
+        }
+
+        // P/Invoke declarations
+        private delegate bool EnumThreadWndProc(IntPtr hWnd, IntPtr lp);
+        [DllImport(&quot;user32.dll&quot;)]
+        private static extern bool EnumThreadWindows(int tid, EnumThreadWndProc callback, IntPtr lp);
+        [DllImport(&quot;kernel32.dll&quot;)]
+        private static extern int GetCurrentThreadId();
+        [DllImport(&quot;user32.dll&quot;)]
+        private static extern int GetClassName(IntPtr hWnd, StringBuilder buffer, int buflen);
+        [DllImport(&quot;user32.dll&quot;)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
+    }
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[使用ChromeTracing工具协助定位bug]]></title>
         <id>https://www.avaloninparadise.cn/post/shi-yong-roslyn-wei-mei-ge-han-shu-tian-jia-dai-ma/</id>
         <link href="https://www.avaloninparadise.cn/post/shi-yong-roslyn-wei-mei-ge-han-shu-tian-jia-dai-ma/">
         </link>
         <updated>2020-09-23T13:36:58.000Z</updated>
-        <content type="html"><![CDATA[<pre><code class="language-c#">class Program
+        <content type="html"><![CDATA[<h1 id="背景">背景</h1>
+<p>不知各位是否经历过多线程bug的地狱。在各种线程的时序之间来回挣扎，大概就是写多线程的痛。到底是谁先谁后，两次运行之间到底有什么区别，为什么有的时候会复现bug，有的时候就不能。此类问题会令人怀疑人生。在读完本文后，这些都将成为过去式！</p>
+<h1 id="chrome-tracing-tool">Chrome Tracing Tool</h1>
+<p>Chrome Tracing Tool是chrome浏览器提供的一个工具。该工具考可以录制或加载已录制好的数据，并将其可视化的展现给用户，以便用户进行分析。没错，就是为了搞清楚，代码在运行时，到底干了什么。</p>
+<h2 id="如何使用">如何使用</h2>
+<h3 id="1-生成数据">1. 生成数据</h3>
+<p>由于我不是搞web的，所以录制对我来说没什么用。所以我得自己生成数据。具体的数据格式请看<a href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/edit?pli=1">文档</a>。<br>
+特别复杂的我反正是没用上，所以基本的json格式就是</p>
+<pre><code class="language-json">{
+    &quot;traceEvents&quot; : [
+        {
+            &quot;cat&quot;: &quot;function&quot;, //分类
+            &quot;dur&quot;: 20, //持续时间
+            &quot;name&quot;: &quot;Event1&quot;,  //事件名称
+            &quot;ph&quot;: &quot;X&quot;,
+            &quot;pid&quot;: 0,  //进程ID
+            &quot;tid&quot;: 1,  //线程ID
+            &quot;ts&quot;: 0,  //事件起始时间
+            &quot;args&quot;: {  //额外参数
+                &quot;filePath&quot;: &quot;sc file path1&quot;
+            }
+        },
+        {
+            &quot;cat&quot;: &quot;function&quot;, //分类
+            &quot;dur&quot;: 20, //持续时间
+            &quot;name&quot;: &quot;Event2&quot;,  //事件名称
+            &quot;ph&quot;: &quot;X&quot;,
+            &quot;pid&quot;: 0,  //进程ID
+            &quot;tid&quot;: 2,  //线程ID
+            &quot;ts&quot;: 10,  //事件起始时间
+            &quot;args&quot;: {  //额外参数
+                &quot;filePath&quot;: &quot;sc file path2&quot;
+            }
+        }
+    ]
+}
+</code></pre>
+<h3 id="2-在chrome中打开">2. 在chrome中打开</h3>
+<p>将上面的json保存，然后打开chrome，地址栏输入<code>Chrome://Tracing</code>按回车。我这边用的Edge，所以地址栏稍稍有点变化。总之会看起来像这样：<br>
+<img src="https://www.avaloninparadise.cn/post-images/1600916179025.png" alt="EdgeTracing" loading="lazy"><br>
+之后我们点左上角的load按钮，选中我们的数据。<strong>注意不要直接粘贴之前文章中的json，因为json是不允许注释的，你需要手动把那些注释都去掉。</strong><br>
+<img src="https://www.avaloninparadise.cn/post-images/1600916513250.png" alt="完成加载" loading="lazy"></p>
+<h3 id="3-查看数据">3. 查看数据</h3>
+<p>这个就自己摸索啦。可以用鼠标点点点，也可以用键盘。最近常用的是<code>A</code>和<code>D</code>，对应往左和往右，<code>W</code>和<code>S</code>对应的是放大和缩小。</p>
+<h1 id="如何生成数据">如何生成数据？</h1>
+<p>很明显，由于不能录制，如何生成数据就成了一个问题。这里可以参考一下这位小哥的视频（<a href="https://www.bilibili.com/video/BV1VJ411M7WR?p=81">B站</a>，<a href="https://www.youtube.com/watch?v=xlAH4dbMVnU&amp;list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb&amp;index=81">原视频</a>）。我会告诉你我就是从这学来的吗？为了避免你们太长不看，我把github的文件地址也放在<a href="https://github.com/TheCherno/Hazel/blob/0090b94af9be167cf5c399d8091c58e78bff41fd/Hazel/src/Hazel/Debug/Instrumentor.h">这里</a>了。<br>
+C++的话参考小哥的就可以了，其实还应该把写文件用队列去做以免影响到性能。但是C#应该怎么办呢？C#也没有像C++一样的特性（没看视频的不知道我在说什么）。唯一类似的就是using了，能够自动的在结束时调用Dispose方法。虽然可能会影响到GC，但是我用C#也不做什么高性能的东西，也就无所谓了。我把我自己用的代码贴在这里。</p>
+<blockquote>
+<p>这里必须吐槽一下Gridea，不能上传文件就是很难受。也不知道是不是github page的限制，等我有空了自己添加这个功能试试看。</p>
+</blockquote>
+<p>AutoEventTracer.cs</p>
+<pre><code class="language-c#">
+using System;
+using System.Runtime.CompilerServices;
+
+namespace EventTracing
+{
+    public class AutoEventTracer : IDisposable
+    {
+        public void Dispose()
+        {
+            EventTracer.TraceEvent(_marker,_eventName,_filePath);
+        }
+
+        private readonly EventTraceMaker _marker;
+        private readonly string _eventName;
+        private readonly string _filePath;
+
+        public AutoEventTracer([CallerMemberName] string eventName = null, [CallerFilePath] string filePath = null)
+        {
+            _marker = EventTracer.StartTrace();
+            _eventName = eventName;
+            _filePath = filePath;
+        }
+    }
+}
+</code></pre>
+<p>EventTraceMaker.cs</p>
+<pre><code class="language-c#">using System;
+
+namespace EventTracing
+{
+    public class EventTraceMaker
+    {
+        private readonly DateTime m_startTime;
+        private double m_duration;
+        internal EventTraceMaker()
+        {
+            m_startTime = DateTime.Now;
+        }
+
+        internal void Stop()
+        {
+            m_duration = (DateTime.Now - m_startTime).TotalMilliseconds;
+        }
+
+        internal double GetDuration()
+        {
+            return m_duration;
+        }
+        internal DateTime StartTime { get { return m_startTime; } }
+    }
+}
+</code></pre>
+<p>EventTracer.cs</p>
+<pre><code class="language-c#">using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Threading.Tasks;
+
+namespace EventTracing
+{
+    public class EventTracer
+    {
+        private readonly BlockingCollection&lt;string&gt; m_messageQueue;
+        private EventTracer()
+        {
+            m_messageQueue = new BlockingCollection&lt;string&gt;();
+        }
+
+
+        private Task m_saveTask;
+        private async void SaveTraceInfo(string filePath)
+        {
+            m_saveTask = Task.Run(() =&gt;
+            {
+                using var fs = File.Open(filePath, FileMode.Create, FileAccess.Write);
+                using var sw = new StreamWriter(fs);
+                foreach (var message in m_messageQueue.GetConsumingEnumerable())
+                {
+                    sw.Write(message);
+                    sw.Flush();
+                }
+            });
+            await m_saveTask;
+        }
+
+        public static void Init(string filePath)
+        {
+            s_instance.IInit(filePath);
+        }
+        private bool m_traceInited = false;
+        public void IInit(string filePath)
+        {
+            if (m_traceInited)
+                throw new Exception(&quot;Tracing already initialized.&quot;);
+            m_traceInited = true;
+            SaveTraceInfo(filePath);
+        }
+
+        private static readonly EventTracer s_instance;
+        private static readonly DateTime s_applicationStartTime;
+
+        static EventTracer()
+        {
+            s_instance = new EventTracer();
+            s_applicationStartTime = DateTime.Now;
+            s_instance.m_messageQueue.Add(&quot;{\&quot;otherData\&quot;:{},\&quot;displayTimeUnit\&quot;:\&quot;ms\&quot;,\&quot;traceEvents\&quot;:[{}&quot;);
+        }
+
+        public static EventTracer GetInstance()
+        {
+            return s_instance;
+        }
+
+        public static EventTraceMaker StartTrace()
+        {
+            return s_instance.IStartTrace();
+        }
+
+        public EventTraceMaker IStartTrace()
+        {
+            return new EventTraceMaker();
+        }
+
+        public static void TraceEvent(EventTraceMaker marker, [CallerMemberName] string eventName = null, [CallerFilePath] string filePath = null)
+        {
+            s_instance.ITraceEvent(marker, eventName, filePath);
+        }
+
+        public void ITraceEvent(EventTraceMaker marker, [CallerMemberName] string eventName = null, [CallerFilePath] string filePath = null)
+        {
+            marker.Stop();
+            var message = $&quot;,{{\&quot;cat\&quot;:\&quot;function\&quot;,\&quot;dur\&quot;:{marker.GetDuration() * 1000},\&quot;name\&quot;:\&quot;{eventName}\&quot;,\&quot;ph\&quot;:\&quot;X\&quot;,\&quot;pid\&quot;:0,\&quot;tid\&quot;:{Thread.CurrentThread.ManagedThreadId},\&quot;ts\&quot;:{(marker.StartTime - s_applicationStartTime).TotalMilliseconds * 1000},\&quot;args\&quot;:{{\&quot;filePath\&quot;:\&quot;{filePath.Replace(&quot;\\&quot;, &quot;\\\\&quot;)}\&quot;}}}}&quot;;
+            m_messageQueue.Add(message);
+        }
+
+
+        public static void EndTrace()
+        {
+            s_instance.m_messageQueue.CompleteAdding();
+            s_instance.m_saveTask.Wait();
+            s_instance.IEndTrace();
+        }
+        private bool m_traceEnded = false;
+        public void IEndTrace()
+        {
+            if (m_traceEnded)
+                throw new Exception(&quot;Tracing has already ended.&quot;);
+            m_traceEnded = true;
+            m_messageQueue.Add(&quot;]}&quot;);
+            m_messageQueue.CompleteAdding();
+        }
+    }
+
+}
+</code></pre>
+<h2 id="在项目中如何使用">在项目中如何使用？</h2>
+<p>请参考下面的代码。同时记得在程序开始和结束时分别调用<code>EventTracer.Init(filePath)</code>和<code>EventTracer.EndTrace()</code>。</p>
+<pre><code class="language-c#">//在任何你需要记录的地方直接用！
+public  void Test()
+{
+    using (var tracer = new AutoEventTracer())
+    {
+        //your actual code here
+    }
+}
+
+public  void Test1()
+{
+    //手动指定事件名
+    using (var tracer = new AutoEventTracer(&quot;Test1Event&quot;))
+    {
+        //your actual code here
+    }
+}
+</code></pre>
+<h1 id="已有项目如何使用">已有项目如何使用？</h1>
+<p>有读者可能会想了：亲，你说的都对，但是我总不能一点一点的往已有项目添加吧。<br>
+淡定，贴心如我已经帮你想好了！请看下面的代码！运行它就能够往指定文件夹下的cs文件中的<strong>每个函数体</strong>添加AutoEventTracer。缺点就是可能会把一些无关紧要的函数也添加上，这个时候你就得手动去改啦。<strong>运行前记得版本备份，玩坏了我不负责。</strong></p>
+<blockquote>
+<p>如何编译下面的code请参考<a href="https://blog.walterlv.com/post/analysis-code-of-existed-projects-using-roslyn">这篇文章</a>。<br>
+对Roslyn感兴趣请阅读<a href="https://joshvarty.com/learn-roslyn-now/">此系列</a><br>
+想知道我那串linq怎么写的，看<a href="http://roslynquoter.azurewebsites.net/">这里</a></p>
+</blockquote>
+<pre><code class="language-c#">class Program
     {
         static void Main(string[] args)
         {
