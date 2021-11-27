@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.avaloninparadise.cn</id>
     <title>理想乡</title>
-    <updated>2021-06-29T12:48:59.799Z</updated>
+    <updated>2021-11-27T08:36:50.295Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://www.avaloninparadise.cn"/>
     <link rel="self" href="https://www.avaloninparadise.cn/atom.xml"/>
@@ -11,14 +11,12 @@
     <icon>https://www.avaloninparadise.cn/favicon.ico</icon>
     <rights>All rights reserved 2021, 理想乡</rights>
     <entry>
-        <title type="html"><![CDATA[TCP网络编程学习总结]]></title>
+        <title type="html"><![CDATA[网络编程学习总结]]></title>
         <id>https://www.avaloninparadise.cn/post/tcp-wang-luo-bian-cheng-xue-xi-zong-jie/</id>
         <link href="https://www.avaloninparadise.cn/post/tcp-wang-luo-bian-cheng-xue-xi-zong-jie/">
         </link>
         <updated>2021-04-27T05:55:56.000Z</updated>
-        <content type="html"><![CDATA[<ol>
-<li>核心模块</li>
-</ol>
+        <content type="html"><![CDATA[<h1 id="1-核心模块">1. 核心模块</h1>
 <table>
 <thead>
 <tr>
@@ -45,10 +43,31 @@
 </tr>
 </tbody>
 </table>
-<ol start="2">
-<li>基于上述模块的一个网络编程模型</li>
-</ol>
+<h1 id="2-基于上述模块的一个网络编程模型">2. 基于上述模块的一个网络编程模型</h1>
 <figure data-type="image" tabindex="1"><img src="https://www.avaloninparadise.cn/post-images/1619503368586.png" alt="" loading="lazy"></figure>
+<h1 id="3-模块详解">3. 模块详解</h1>
+<h2 id="31-序列化">3.1 序列化</h2>
+<p>常见的序列化格式有xml、json、MessagePack等。<br>
+把序列化格式对应的类作为调度器的参数会使得架构更容易。通常会使用泛型来进行序列化。常见的序列化接口如下：</p>
+<pre><code class="language-csharp">public interface ISerializer&lt;TMessage&gt;
+{
+    TMessage Serialize&lt;T&gt;(T message);
+    T Deserialize&lt;T&gt;(TMessage m);
+}
+</code></pre>
+<h2 id="32-数据连接">3.2 数据连接</h2>
+<p>常见的数据连接为TCP/IP协议。实际上任何用于通信的协议都行。一般来说区别只是在于建立连接的方式，连接的断开检测，以及网络流格式和本地格式。</p>
+<h2 id="33-调度器">3.3 调度器</h2>
+<p>网络编程的核心之一就是调度器。如何将收到的消息对应到需要执行的函数，如何从收到的消息中获取到执行函数需要的参数。是调度器设计的难点之一。另一个设计难点在于，如何将不同类型的函数注册给调度器。</p>
+<p>如何将消息匹配到函数？ASP.NET中使用路由解决这一问题。一般来说，是在消息中携带一段用于匹配函数的信息，在函数注册到调度器时，把如何从这段信息中匹配到该函数的规则一同注册到调度器。收到消息时，挨个按照规则进行匹配，执行符合条件的函数。</p>
+<p>如何从消息中获取到执行函数需要的参数？简单的做法就是反射。考虑到执行效率，可以编写特定的反序列化函数。</p>
+<p>如何将不同类型的函数注册给调度器？这个就要结合序列化我们提到的，将序列化格式对应的类作为参数，来解释了。因为我们传输的实际上都是序列化之后的数据，所以我们可以把任何函数都用一个闭包包起来，而闭包的参数就使用序列化格式的类。</p>
+<h2 id="34-连接管理">3.4 连接管理</h2>
+<p>连接管理的主要几个目的：</p>
+<ol>
+<li>hold住通信线程</li>
+<li>负责在断开时调用dispose释放资源。长时间未收到消息认定连接断开，释放相关资源。</li>
+</ol>
 ]]></content>
     </entry>
     <entry>

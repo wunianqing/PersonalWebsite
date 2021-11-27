@@ -85,6 +85,8 @@
             <a href="https://www.avaloninparadise.cn/tags/"><h3 class="heading">👉标签</h3></a>
             <ul>
                 
+                    <li><a href="https://www.avaloninparadise.cn/tag/Sy_-0SFnj/">Network Prograomming</a></li>
+                
                     <li><a href="https://www.avaloninparadise.cn/tag/2ttYE691-/">代码记录</a></li>
                 
                     <li><a href="https://www.avaloninparadise.cn/tag/5CXSWzvUJ/">C#</a></li>
@@ -159,25 +161,29 @@
         <article class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 col-sm-8 col-sm-offset-2 col-xs-12 col-xs-offset-0">
             <figure class="animate-box">
                 
-                    <img src="https://www.avaloninparadise.cn/post-images/shi-yong-wei-ruan-ti-gong-de-settings-yi-ji-zi-ding-yi-settingsprovider.jpg" alt="TCP网络编程学习总结" class="img-responsive">
+                    <img src="https://www.avaloninparadise.cn/post-images/shi-yong-wei-ruan-ti-gong-de-settings-yi-ji-zi-ding-yi-settingsprovider.jpg" alt="网络编程学习总结" class="img-responsive">
                 
             </figure>
             <span class="fh5co-meta animate-box">
                 
+                    <div class="tag-container">
+                        
+                            <a href="https://www.avaloninparadise.cn/tag/Sy_-0SFnj/" class="tag">Network Prograomming, </a>
+                        
+                    </div>
+                
             </span>
-            <h2 class="fh5co-article-title animate-box">TCP网络编程学习总结</h2>
+            <h2 class="fh5co-article-title animate-box">网络编程学习总结</h2>
             <ol class="breadcrumb fh5co-meta fh5co-date animate-box" style="margin-bottom:0; background-color:#f8f9fa">
                 <li>2021-04-27</li>
-                <li>105字</li>
-                <li>1 min read</li>
+                <li>673字</li>
+                <li>3 min read</li>
             </ol>
 
             <div class="col-lg-12 col-lg-offset-0 col-md-12 col-md-offset-0 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0 text-left content-article">
                 <div class="row">
                     <div class="col-md-12 animate-box post-content">
-                        <p> <ol>
-<li>核心模块</li>
-</ol>
+                        <p> <h1 id="1-核心模块">1. 核心模块</h1>
 <table>
 <thead>
 <tr>
@@ -204,10 +210,31 @@
 </tr>
 </tbody>
 </table>
-<ol start="2">
-<li>基于上述模块的一个网络编程模型</li>
-</ol>
+<h1 id="2-基于上述模块的一个网络编程模型">2. 基于上述模块的一个网络编程模型</h1>
 <figure data-type="image" tabindex="1"><img src="https://www.avaloninparadise.cn/post-images/1619503368586.png" alt="" loading="lazy"></figure>
+<h1 id="3-模块详解">3. 模块详解</h1>
+<h2 id="31-序列化">3.1 序列化</h2>
+<p>常见的序列化格式有xml、json、MessagePack等。<br>
+把序列化格式对应的类作为调度器的参数会使得架构更容易。通常会使用泛型来进行序列化。常见的序列化接口如下：</p>
+<pre><code class="language-csharp">public interface ISerializer&lt;TMessage&gt;
+{
+    TMessage Serialize&lt;T&gt;(T message);
+    T Deserialize&lt;T&gt;(TMessage m);
+}
+</code></pre>
+<h2 id="32-数据连接">3.2 数据连接</h2>
+<p>常见的数据连接为TCP/IP协议。实际上任何用于通信的协议都行。一般来说区别只是在于建立连接的方式，连接的断开检测，以及网络流格式和本地格式。</p>
+<h2 id="33-调度器">3.3 调度器</h2>
+<p>网络编程的核心之一就是调度器。如何将收到的消息对应到需要执行的函数，如何从收到的消息中获取到执行函数需要的参数。是调度器设计的难点之一。另一个设计难点在于，如何将不同类型的函数注册给调度器。</p>
+<p>如何将消息匹配到函数？ASP.NET中使用路由解决这一问题。一般来说，是在消息中携带一段用于匹配函数的信息，在函数注册到调度器时，把如何从这段信息中匹配到该函数的规则一同注册到调度器。收到消息时，挨个按照规则进行匹配，执行符合条件的函数。</p>
+<p>如何从消息中获取到执行函数需要的参数？简单的做法就是反射。考虑到执行效率，可以编写特定的反序列化函数。</p>
+<p>如何将不同类型的函数注册给调度器？这个就要结合序列化我们提到的，将序列化格式对应的类作为参数，来解释了。因为我们传输的实际上都是序列化之后的数据，所以我们可以把任何函数都用一个闭包包起来，而闭包的参数就使用序列化格式的类。</p>
+<h2 id="34-连接管理">3.4 连接管理</h2>
+<p>连接管理的主要几个目的：</p>
+<ol>
+<li>hold住通信线程</li>
+<li>负责在断开时调用dispose释放资源。长时间未收到消息认定连接断开，释放相关资源。</li>
+</ol>
  </p>
                     </div>
                 </div>
@@ -250,17 +277,34 @@
     <!-- 返回顶部 -->
     <div class="back-to-top">
     
+        <a href="#!" id="tool-toc" class="hidden-xs hidden-sm">
+            <i class="fa fa-map"></i>
+        </a>
+        <br>
+    
     <a href="#top" class="hidden-xs hidden-sm"><i class="fa fa-paper-plane"></i></a>
 </div>
 
 <div class="post-toc animated fadeInRight hidden-xs hidden-sm" style="display: none;">
-    
+    <ul class="markdownIt-TOC">
+<li><a href="#1-%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97">1. 核心模块</a></li>
+<li><a href="#2-%E5%9F%BA%E4%BA%8E%E4%B8%8A%E8%BF%B0%E6%A8%A1%E5%9D%97%E7%9A%84%E4%B8%80%E4%B8%AA%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B">2. 基于上述模块的一个网络编程模型</a></li>
+<li><a href="#3-%E6%A8%A1%E5%9D%97%E8%AF%A6%E8%A7%A3">3. 模块详解</a>
+<ul>
+<li><a href="#31-%E5%BA%8F%E5%88%97%E5%8C%96">3.1 序列化</a></li>
+<li><a href="#32-%E6%95%B0%E6%8D%AE%E8%BF%9E%E6%8E%A5">3.2 数据连接</a></li>
+<li><a href="#33-%E8%B0%83%E5%BA%A6%E5%99%A8">3.3 调度器</a></li>
+<li><a href="#34-%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86">3.4 连接管理</a></li>
+</ul>
+</li>
+</ul>
+
 </div>
 
 
     
 <footer id="fh5co-footer">
-  <p>蜀ICP备18034189号-1</p>
+  <p><a href="https://beian.miit.gov.cn/">蜀ICP备18034189号-1</a></p>
 </footer>
 
 
